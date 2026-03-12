@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Admin Dashboard
+{% endblock %}
+
+{% block nav_left %}
+{% endblock %}
+
+{% block nav_title %}
+    Admin Dashboard
+{% endblock %}
+
+{% block nav_right %} <a href="{% url 'login' %}" class="logout-link">Logout</a>
+{% endblock %}
+
+{% block content %}
+
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+
+        <div class="sidebar">
+
+            <h3>Management</h3>
+
+            <ul class="admin-menu">
+
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Live Orders</a></li>
+                <li><a href="#">Menu Management</a></li>
+                <li><a href="#">Order History</a></li>
+                <li><a href="#">Settings</a></li>
+
+            </ul>
+
+        </div>
+
+        <!-- Main Content -->
+
+        <div class="admin-content">
+
+            <h2>Live Orders</h2>
+
+            <!-- Order Card -->
+
+            <div class="order-card">
+
+                <h4>Table 3</h4>
+
+                <ul>
+
+                    <li>Black Pepper Beef Pasta ×1</li>
+                    <li>Americano ×1</li>
+
+                </ul>
+
+                <div class="order-status">
+
+                    <span class="status preparing">Preparing</span>
+
+                    <button class="btn small-btn">Mark Ready</button>
+
+                </div>
+
+            </div>
+
+            <div class="order-card">
+
+                <h4>Table 5</h4>
+
+                <ul>
+
+                    <li>Tomato Soup ×2</li>
+                    <li>Latte ×1</li>
+
+                </ul>
+
+                <div class="order-status">
+
+                    <span class="status waiting">Waiting</span>
+
+                    <button class="btn small-btn">Start Preparing</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
