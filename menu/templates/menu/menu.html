@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Menu
+{% endblock %}
+
+{% block nav_title %}
+    SmartTable
+{% endblock %}
+
+{% block nav_right %} <a href="{% url 'orders:cart' %}" class="cart-link">
+    🛒 <span id="cart-count">{{ cart_count|default:0 }}</span> </a>
+{% endblock %}
+
+{% block content %}
+
+    <h2 class="welcome">Welcome! Table 1</h2>
+
+    <!-- Category Filter -->
+
+    <div class="menu-categories">
+
+        <button class="category active">All</button>
+        {% for c in categories %}
+        <button class="category">{{ c }}</button>
+        {% endfor %}
+
+    </div>
+
+    <!-- Menu List -->
+
+    <div class="menu-list">
+
+        {% for it in items %}
+        <div class="menu-card">
+            <div class="menu-img"></div>
+            <div class="menu-info">
+                <h3>{{ it.name }}</h3>
+                {% if it.description %}<p class="description">{{ it.description }}</p>{% endif %}
+                <p class="price">£{{ it.price }}</p>
+            </div>
+            <div class="quantity">
+                <button hx-post="{% url 'orders:cart-dec' it.id %}" hx-swap="none">-</button>
+                <span>0</span>
+                <button hx-post="{% url 'orders:cart-add' it.id %}" hx-swap="none">+</button>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <!-- Cart Button -->
+
+    <div class="cart-bar">
+
+        <a href="{% url 'orders:cart' %}" class="btn cart-btn">
+            View Cart
+
+        </a>
+
+    </div>
+
+{% endblock %}
