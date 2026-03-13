@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block nav_left %} <a href="{% url 'menu' %}" class="back-link">< Back</a>
+{% endblock %}
+
+{% block nav_title %}
+    Cart Detail
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="cart-container">
+        {% for line in lines %}
+        <div class="cart-item">
+            <div class="menu-img"></div>
+            <div class="cart-info">
+                <h3>{{ line.item.name }}</h3>
+                <div class="cart-meta">
+                    <span class="price">£{{ line.item.price }}</span>
+                    <span class="qty">x{{ line.qty }}</span>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Your cart is empty.</p>
+        {% endfor %}
+
+        <hr>
+
+        <div class="cart-total">
+            <span>Total</span>
+            <strong>£{{ total }}</strong>
+        </div>
+
+        <hr>
+
+        <form method="post" action="{% url 'orders:checkout' %}">
+            {% csrf_token %}
+            <div class="place-order">
+                <button class="btn order-btn" type="submit">
+                    Place Order
+                </button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

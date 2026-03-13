@@ -10,7 +10,24 @@
 
     <title>{% block title %}SmartTable{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script>
+        (function () {
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+            document.addEventListener('htmx:configRequest', function (evt) {
+                const token = getCookie('csrftoken');
+                if (token) {
+                    evt.detail.headers['X-CSRFToken'] = token;
+                }
+            });
+        })();
+    </script>
 
 </head>
 

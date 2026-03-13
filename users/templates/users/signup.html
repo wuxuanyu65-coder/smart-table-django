@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Sign Up
+{% endblock %}
+
+{% block nav_left %}
+{% endblock %}
+
+{% block nav_title %}
+    Sign Up
+{% endblock %}
+
+{% block nav_right %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="signup-container">
+
+        <h2 class="signup-title">Create Account</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn signup-btn">
+                Sign Up
+            </button>
+        </form>
+
+        <p class="login-link">
+            Already have an account?
+            <a href="{% url 'login' %}">Login</a>
+        </p>
+
+    </div>
+
+{% endblock %}
