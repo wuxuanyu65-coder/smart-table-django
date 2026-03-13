@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from menu.models import MenuItem
 from tables.models import Table
 from .models import Order, OrderItem
@@ -27,7 +28,12 @@ def cart_add(request: HttpRequest, item_id: int) -> HttpResponse:
     cart[key] = cart.get(key, 0) + 1
     request.session["cart"] = cart
     count = _cart_count(cart)
-    return HttpResponse(f'<span id="cart-count" hx-swap-oob="true">{count}</span>')
+    current_qty = cart.get(key, 0)
+    return HttpResponse(
+        f'<span id="cart-count" hx-swap-oob="true">{count}</span>'
+        f'<span id="qty-{item_id}" hx-swap-oob="true">{current_qty}</span>'
+        f'<div id="cart-live" hx-swap-oob="true" class="visually-hidden">Cart items: {count}</div>'
+    )
 
 
 @require_POST
@@ -40,7 +46,12 @@ def cart_dec(request: HttpRequest, item_id: int) -> HttpResponse:
             del cart[key]
     request.session["cart"] = cart
     count = _cart_count(cart)
-    return HttpResponse(f'<span id="cart-count" hx-swap-oob="true">{count}</span>')
+    current_qty = cart.get(key, 0)
+    return HttpResponse(
+        f'<span id="cart-count" hx-swap-oob="true">{count}</span>'
+        f'<span id="qty-{item_id}" hx-swap-oob="true">{current_qty}</span>'
+        f'<div id="cart-live" hx-swap-oob="true" class="visually-hidden">Cart items: {count}</div>'
+    )
 
 
 def cart_view(request: HttpRequest) -> HttpResponse:
@@ -60,6 +71,7 @@ def cart_view(request: HttpRequest) -> HttpResponse:
 
 
 @require_POST
+@login_required
 def checkout(request: HttpRequest) -> HttpResponse:
     cart = _get_cart(request.session)
     if not cart:

@@ -32,17 +32,25 @@
     <div class="menu-list">
 
         {% for it in items %}
-        <div class="menu-card">
+        <div class="menu-card d-flex align-items-center justify-content-between">
             <div class="menu-img"></div>
             <div class="menu-info">
                 <h3>{{ it.name }}</h3>
                 {% if it.description %}<p class="description">{{ it.description }}</p>{% endif %}
                 <p class="price">£{{ it.price }}</p>
             </div>
-            <div class="quantity">
-                <button hx-post="{% url 'orders:cart-dec' it.id %}" hx-swap="none">-</button>
-                <span>0</span>
-                <button hx-post="{% url 'orders:cart-add' it.id %}" hx-swap="none">+</button>
+            <div class="quantity d-flex align-items-center gap-2" role="group" aria-label="Quantity for {{ it.name }}">
+                <button class="btn btn-outline-secondary"
+                        hx-post="{% url 'orders:cart-dec' it.id %}" hx-swap="none"
+                        aria-controls="qty-{{ it.id }}" aria-label="Decrease quantity">
+                    −
+                </button>
+                <span id="qty-{{ it.id }}" class="px-2">{{ it.current_qty|default:0 }}</span>
+                <button class="btn btn-outline-primary"
+                        hx-post="{% url 'orders:cart-add' it.id %}" hx-swap="none"
+                        aria-controls="qty-{{ it.id }}" aria-label="Increase quantity">
+                    +
+                </button>
             </div>
         </div>
         {% endfor %}
