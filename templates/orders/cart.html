@@ -44,7 +44,7 @@
         <form method="post" action="{% url 'orders:checkout' %}">
             {% csrf_token %}
             <div class="place-order">
-                <button class="btn order-btn" type="submit">
+                <button class="btn btn-primary order-btn" type="submit">
                     Place Order
                 </button>
             </div>

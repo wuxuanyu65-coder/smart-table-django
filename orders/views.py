@@ -29,9 +29,21 @@ def cart_add(request: HttpRequest, item_id: int) -> HttpResponse:
     request.session["cart"] = cart
     count = _cart_count(cart)
     current_qty = cart.get(key, 0)
+    dec_url = reverse("orders:cart-dec", args=[item_id])
+    minus_fragment = (
+        f'<div id="minus-{item_id}" hx-swap-oob="true" class="minus-circle">'
+        f'<button hx-post="{dec_url}" hx-swap="none" aria-controls="qty-{item_id}" aria-label="Remove">−</button>'
+        f'</div>'
+        if current_qty > 0
+        else
+        f'<div id="minus-{item_id}" hx-swap-oob="true" class="minus-circle" style="display:none">'
+        f'<button hx-post="{dec_url}" hx-swap="none" aria-controls="qty-{item_id}" aria-label="Remove">−</button>'
+        f'</div>'
+    )
     return HttpResponse(
         f'<span id="cart-count" hx-swap-oob="true">{count}</span>'
         f'<span id="qty-{item_id}" hx-swap-oob="true">{current_qty}</span>'
+        f'{minus_fragment}'
         f'<div id="cart-live" hx-swap-oob="true" class="visually-hidden">Cart items: {count}</div>'
     )
 
@@ -47,9 +59,21 @@ def cart_dec(request: HttpRequest, item_id: int) -> HttpResponse:
     request.session["cart"] = cart
     count = _cart_count(cart)
     current_qty = cart.get(key, 0)
+    dec_url = reverse("orders:cart-dec", args=[item_id])
+    minus_fragment = (
+        f'<div id="minus-{item_id}" hx-swap-oob="true" class="minus-circle">'
+        f'<button hx-post="{dec_url}" hx-swap="none" aria-controls="qty-{item_id}" aria-label="Remove">−</button>'
+        f'</div>'
+        if current_qty > 0
+        else
+        f'<div id="minus-{item_id}" hx-swap-oob="true" class="minus-circle" style="display:none">'
+        f'<button hx-post="{dec_url}" hx-swap="none" aria-controls="qty-{item_id}" aria-label="Remove">−</button>'
+        f'</div>'
+    )
     return HttpResponse(
         f'<span id="cart-count" hx-swap-oob="true">{count}</span>'
         f'<span id="qty-{item_id}" hx-swap-oob="true">{current_qty}</span>'
+        f'{minus_fragment}'
         f'<div id="cart-live" hx-swap-oob="true" class="visually-hidden">Cart items: {count}</div>'
     )
 
