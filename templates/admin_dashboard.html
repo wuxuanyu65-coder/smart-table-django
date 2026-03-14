@@ -21,9 +21,9 @@
         <div class="sidebar">
             <h5 class="mb-3">Management</h5>
             <ul class="admin-menu">
-                <li><a href="#">Dashboard</a></li>
+                <li><a href="{% url 'admin-dashboard' %}" class="fw-bold text-primary">Dashboard</a></li>
                 <li><a href="#">Live Orders</a></li>
-                <li><a href="#">Menu Management</a></li>
+                <li><a href="{% url 'menu-manage' %}">Menu Management</a></li>
                 <li><a href="#">Order History</a></li>
                 <li><a href="#">Settings</a></li>
             </ul>

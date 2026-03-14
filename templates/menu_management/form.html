@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <div class="sidebar">
+        <ul class="admin-menu">
+            <li><a href="{% url 'menu-manage' %}" class="fw-bold text-primary">Menu Management</a></li>
+        </ul>
+    </div>
+    <div class="admin-content">
+        <h2 class="mb-4">{{ title }}</h2>
+        <form method="post" class="card p-4 shadow-sm" style="max-width: 600px;">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="mb-3">
+                {% if field.name == 'is_available' %}
+                <div class="form-check">
+                    {{ field }}
+                    <label class="form-check-label" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                </div>
+                {% else %}
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% endif %}
+                
+                {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                <div class="text-danger">
+                    {{ field.errors }}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{% url 'menu-manage' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
