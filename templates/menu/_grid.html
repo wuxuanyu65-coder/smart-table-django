@@ -1,0 +1,17 @@
+{% for it in items %}
+<div class="food-card">
+  <div class="food-img">
+    <div class="counter-overlay">
+      <div class="minus-circle" id="minus-{{ it.id }}"{% if it.current_qty|default:0 == 0 %} style="display:none"{% endif %}>
+        <button hx-post="{% url 'orders:cart-dec' it.id %}" hx-swap="none" aria-controls="qty-{{ it.id }}" aria-label="Remove {{ it.name }}">−</button>
+      </div>
+      <span class="counter-qty" id="qty-{{ it.id }}">{{ it.current_qty|default:0 }}</span>
+      <button class="plus-btn" hx-post="{% url 'orders:cart-add' it.id %}" hx-swap="none" aria-controls="qty-{{ it.id }}" aria-label="Add {{ it.name }}">+</button>
+    </div>
+  </div>
+  <div class="food-body">
+    <div class="food-name">{{ it.name }}</div>
+    <div class="food-price">£{{ it.price }}</div>
+  </div>
+</div>
+{% endfor %}

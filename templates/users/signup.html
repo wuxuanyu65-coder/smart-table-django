@@ -15,24 +15,32 @@
 {% endblock %}
 
 {% block content %}
-
-    <div class="signup-container">
-
-        <h2 class="signup-title">Create Account</h2>
-
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn signup-btn">
-                Sign Up
-            </button>
-        </form>
-
-        <p class="login-link">
-            Already have an account?
-            <a href="{% url 'login' %}">Login</a>
-        </p>
-
-    </div>
-
+<div class="row justify-content-center">
+  <div class="col-12 col-sm-10 col-md-6 col-lg-4">
+    <h2 class="mb-3 text-center">Create Account</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+      {% endif %}
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+          {% endif %}
+          {% if field.errors %}
+            <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-success w-100">Sign Up</button>
+    </form>
+    <p class="text-center mt-3">
+      Already have an account?
+      <a href="{% url 'login' %}">Login</a>
+    </p>
+  </div>
+</div>
 {% endblock %}
