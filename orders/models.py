@@ -15,6 +15,8 @@ class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.PROTECT, related_name="orders")
     order_time = models.DateTimeField(auto_now_add=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+    note = models.TextField(blank=True, null=True, help_text="Order-level notes (e.g. allergies, special requests)")
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
 
     def __str__(self) -> str:
@@ -25,10 +27,11 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     item = models.ForeignKey(MenuItem, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     special_request = models.CharField(max_length=255, blank=True)
 
     def line_total(self) -> float:
-        return float(self.quantity) * float(self.item.price)
+        return float(self.quantity) * float(self.price)
 
     def __str__(self) -> str:
         return f"{self.item.name} x{self.quantity}"

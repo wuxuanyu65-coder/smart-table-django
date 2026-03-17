@@ -14,7 +14,7 @@
 
 {% block content %}
 
-    <h2 class="welcome">Welcome! Table 1</h2>
+    <h2 class="welcome">Welcome! Table {{ table_id }}</h2>
 
     <!-- Category Filter -->
 
@@ -37,9 +37,9 @@
     <!-- Menu List -->
 
     <div class="menu-section-title">Most popular</div>
-    <div class="menu-grid" id="menu-grid">
-        {% include "menu/_grid.html" with items=items %}
-    </div>
+    <div class="row" id="menu-grid">
+            {% include "menu/_grid.html" with items=items %}
+        </div>
 
     <!-- Cart Button -->
 

@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SmartTable\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-17 03:45+0000\n"
+"PO-Revision-Date: 2026-03-17 03:45+0000\n"
+"Last-Translator: TraeAI\n"
+"Language-Team: Chinese\n"
+"Language: zh_Hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Welcome to SmartTable"
+msgstr "欢迎来到 SmartTable"
+
+msgid "Smart Dining Experience"
+msgstr "智能餐饮体验"
+
+msgid "Customer Access"
+msgstr "顾客通道"
+
+msgid "Instant Order"
+msgstr "免注册点餐"
+
+msgid "No Registration"
+msgstr "无需注册"
+
+msgid "No account needed. Scan & Order instantly."
+msgstr "无需账号，扫码即点。"
+
+msgid "OR"
+msgstr "或"
+
+msgid "Staff & Member"
+msgstr "员工/会员"
+
+msgid "Register"
+msgstr "注册"
+
+msgid "Sign In"
+msgstr "登录"
+
+msgid "Menu"
+msgstr "菜单"
+
+msgid "Staff Dashboard"
+msgstr "员工仪表盘"
+
+msgid "My Orders"
+msgstr "我的订单"
+
+msgid "Cart"
+msgstr "购物车"
+
+msgid "Sign Up"
+msgstr "注册账号"
+
+msgid "Create Account"
+msgstr "创建账号"
+
+msgid "Already have an account?"
+msgstr "已有账号？"
+
+msgid "Login"
+msgstr "登录"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Password (again)"
+msgstr "确认密码"
+
+msgid "Sign out"
+msgstr "注销"
+
+msgid "Logout"
+msgstr "注销"

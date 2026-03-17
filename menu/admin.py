@@ -1,17 +1,12 @@
 from django.contrib import admin
-from .models import MenuItem, DietaryInfo, Favorite
+from .models import MenuItem, Favorite
 
 
 @admin.register(MenuItem)
 class MenuItemAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "category", "price", "is_available")
+    list_display = ("id", "name", "category", "price", "is_available", "is_vegetarian", "is_vegan", "is_gluten_free")
     search_fields = ("name", "category")
-    list_filter = ("category", "is_available")
-
-
-@admin.register(DietaryInfo)
-class DietaryInfoAdmin(admin.ModelAdmin):
-    list_display = ("id", "menu_item", "dietary_tags")
+    list_filter = ("category", "is_available", "is_vegetarian", "is_vegan", "is_gluten_free")
 
 
 @admin.register(Favorite)

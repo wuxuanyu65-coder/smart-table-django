@@ -1,23 +1,269 @@
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    background: #f5f5f5;
-    color: #222;
+    /* Dark High-End Glassmorphism Background */
+    background-color: #0f172a; /* Dark slate base */
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(76, 29, 149, 0.6) 0px, transparent 50%), /* Deep Purple Top Left */
+        radial-gradient(at 100% 0%, rgba(30, 64, 175, 0.6) 0px, transparent 50%), /* Deep Blue Top Right */
+        radial-gradient(at 100% 100%, rgba(76, 29, 149, 0.6) 0px, transparent 50%), /* Deep Purple Bottom Right */
+        radial-gradient(at 0% 100%, rgba(15, 23, 42, 1) 0px, transparent 50%); /* Dark Bottom Left */
+    background-attachment: fixed;
+    background-size: cover;
+    color: #f1f5f9; /* Light text for dark mode */
+    min-height: 100vh;
 }
+
 :root{
-    --st-bg:#f7f8fa;
-    --st-card:#ffffff;
-    --st-text:#1c1e21;
-    --st-muted:#6b7280;
-    --st-primary:#0d6efd;
-    --st-border:#e5e7eb;
-    --st-radius:12px;
-    --st-shadow:0 2px 8px rgba(0,0,0,.06);
+    /* Dark Glassmorphism Variables */
+    --st-bg: transparent; 
+    --st-card: rgba(30, 41, 59, 0.7); /* Dark semi-transparent blue-grey */
+    --st-card-border: rgba(255, 255, 255, 0.1); /* Subtle white border */
+    --st-text: #f8fafc; /* White/Light text */
+    --st-muted: #94a3b8; /* Muted slate text */
+    --st-primary: #8b5cf6; /* Violet primary */
+    --st-primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); /* Indigo to Violet */
+    --st-border: rgba(255, 255, 255, 0.1);
+    --st-radius: 16px; 
+    --st-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Stronger shadow for depth */
 }
-html,body{
-    background: var(--st-bg);
-    color: var(--st-text);
+
+/* Glass Card Utility */
+.glass-card {
+    background: var(--st-card) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--st-card-border) !important;
+    box-shadow: var(--st-shadow) !important;
+    border-radius: var(--st-radius) !important;
+    color: var(--st-text) !important;
 }
+
+/* Force Table Transparency */
+.table {
+    background-color: transparent !important;
+    color: var(--st-text) !important;
+}
+.table > :not(caption) > * > * {
+     background-color: transparent !important; /* Forces cells to be transparent */
+     color: var(--st-text) !important;
+     border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+.table-hover > tbody > tr:hover > * {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: var(--st-text) !important;
+}
+
+/* Override existing card styles to be dark glassy */
+.card, .menu-card, .sidebar, .order-card, .cart-item, .navbar, .food-card, .cart-container {
+    background: rgba(30, 41, 59, 0.6) !important; /* Dark glass */
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    border-radius: var(--st-radius) !important;
+    color: var(--st-text) !important;
+}
+
+/* Dashboard Card Variants - Colored Glass */
+.card.bg-primary {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.4) 0%, rgba(13, 110, 253, 0.1) 100%) !important;
+    border-color: rgba(13, 110, 253, 0.3) !important;
+}
+
+.card.bg-success {
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.4) 0%, rgba(25, 135, 84, 0.1) 100%) !important;
+    border-color: rgba(25, 135, 84, 0.3) !important;
+}
+
+.card.bg-warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.4) 0%, rgba(255, 193, 7, 0.1) 100%) !important;
+    border-color: rgba(255, 193, 7, 0.3) !important;
+    color: #fff !important;
+}
+
+.card.bg-info {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.4) 0%, rgba(13, 202, 240, 0.1) 100%) !important;
+    border-color: rgba(13, 202, 240, 0.3) !important;
+}
+
+/* Navbar specific tweak */
+.navbar {
+    background: rgba(15, 23, 42, 0.8) !important; /* Darker for navbar */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Text Overrides for Dark Mode */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: #f8fafc !important;
+}
+
+.text-muted {
+    color: #94a3b8 !important;
+}
+
+/* Input Group Text */
+.input-group-text {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #cbd5e1 !important;
+}
+
+/* Navbar Links */
+.navbar-brand, .nav-link {
+    color: #e2e8f0 !important;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Inner Glass Container */
+.glass-card-inner {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.text-secondary {
+    color: #cbd5e1 !important; /* Lighter gray for dark mode */
+}
+
+.text-success {
+    color: #4ade80 !important; /* Lighter green for dark mode */
+}
+
+.text-primary {
+    color: #a78bfa !important; /* Lighter violet for dark background */
+}
+
+.text-dark {
+    color: #f1f5f9 !important; /* Invert dark text to light */
+}
+
+a {
+    color: #818cf8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #a5b4fc;
+}
+
+/* Form Inputs - Dark Glass Style */
+.form-control, .form-select {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #f8fafc !important;
+    backdrop-filter: blur(10px);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    border-color: #8b5cf6 !important;
+    box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25) !important;
+    color: #fff !important;
+}
+
+.form-control::placeholder {
+    color: #64748b !important;
+}
+
+/* Buttons - Vibrant Gradients */
+.btn-primary {
+    background: var(--st-primary-gradient) !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    color: white !important;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+}
+
+.btn-outline-secondary {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #cbd5e1 !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.btn-dark {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    border: none !important;
+}
+
+/* Specific Component Fixes */
+.list-group-item {
+    background: transparent !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--st-text) !important;
+}
+
+hr {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    opacity: 1 !important;
+}
+
+/* Menu Specifics */
+.food-name {
+    color: #f8fafc;
+}
+.food-price {
+    color: #a78bfa; /* Light purple */
+}
+/* Remove old category styles if duplicated */
+.category.active {
+    background: var(--st-primary-gradient);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+.category {
+    background: rgba(30, 41, 59, 0.4);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.category:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Cart Specifics */
+.cart-item {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Table overrides */
+.table {
+    color: var(--st-text) !important;
+}
+.table td, .table th {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 *:focus {
     outline: 3px solid #1976d2;
     outline-offset: 2px;
@@ -72,6 +318,19 @@ html,body{
     box-shadow: var(--st-shadow);
 }
 
+/* Hide password reveal button in Edge/IE/Chrome */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
 .menu-img {
     width: 72px;
     height: 72px;
@@ -106,11 +365,39 @@ html,body{
 
 .welcome { text-align: center; margin-bottom: 16px; font-weight: 600; }
 
-.menu-categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+/* Category Filters - Enhanced Glass Style */
+.menu-categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
 
-.category { padding: 8px 12px; border: 1px solid var(--st-border); background: #fff; border-radius: 999px; cursor: pointer; }
+.category {
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(30, 41, 59, 0.4); /* Slightly dark base */
+    color: #e2e8f0; /* Light gray text */
+    border-radius: 999px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-.category.active { background: var(--st-primary); color: #fff; border-color: var(--st-primary); }
+.category:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.category.active {
+    background: var(--st-primary-gradient);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); /* Glow effect */
+    font-weight: 600;
+}
 
 .menu-section-title{
     font-size: 1.1rem;
@@ -235,11 +522,14 @@ html,body{
     border: 1px solid var(--st-border);
     border-radius: 999px;
     box-shadow: var(--st-shadow);
+    z-index: 10;
 }
 .counter-qty{
     min-width: 26px;
     text-align: center;
     font-weight: 700;
+    color: #000000 !important; /* Pure black */
+    font-size: 1.1rem; /* Slightly larger */
 }
 .counter-overlay .plus-btn{
     width: 32px;
@@ -263,7 +553,7 @@ html,body{
     border-radius: 999px;
     border: 1px solid var(--st-border);
     background: #fff;
-    color: var(--st-text);
+    color: #000000 !important; /* Pure black */
     font-size: 18px;
     padding: 0;
     display: inline-flex;
@@ -323,8 +613,6 @@ html,body{
 }
 
 .cart-item {
-    display: flex;
-    align-items: center;
     border: 1px solid var(--st-border);
     padding: 14px;
     margin-bottom: 12px;
@@ -349,7 +637,7 @@ html,body{
 }
 
 .qty {
-    color: #555;
+    color: #cbd5e1 !important; /* Light text for dark mode */
 }
 
 .cart-total {
@@ -473,7 +761,16 @@ html,body{
 
 .admin-menu a {
     text-decoration: none;
-    color: #333;
+    color: var(--st-muted);
+    transition: color 0.2s ease;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.admin-menu a:hover {
+    color: var(--st-text);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 /* Content */

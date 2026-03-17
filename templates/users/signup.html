@@ -1,46 +1,80 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}
-    Sign Up
-{% endblock %}
-
-{% block nav_left %}
-{% endblock %}
-
-{% block nav_title %}
-    Sign Up
-{% endblock %}
-
-{% block nav_right %}
-{% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-12 col-sm-10 col-md-6 col-lg-4">
-    <h2 class="mb-3 text-center">Create Account</h2>
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
-      {% endif %}
-      {% for field in form %}
-        <div class="mb-3">
-          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}
-            <div class="form-text">{{ field.help_text }}</div>
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="glass-card p-4">
+        <h2 class="mb-4 text-center fw-bold text-white">Create Account</h2>
+        
+        <form method="post" novalidate>
+          {% csrf_token %}
+          
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger border-0 bg-danger bg-opacity-25 text-white" role="alert">
+                {{ form.non_field_errors }}
+            </div>
           {% endif %}
-          {% if field.errors %}
-            <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
-          {% endif %}
+
+          {% for field in form %}
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-white" for="{{ field.id_for_label }}">
+                  {{ field.label }}
+              </label>
+              
+              {# Manually add form-control class if not present (though widgets usually handle this) #}
+              <div class="input-group">
+                  {{ field }}
+              </div>
+
+              {% if field.help_text %}
+                <div class="form-text small text-white-50 mt-1">
+                    {{ field.help_text|safe }}
+                </div>
+              {% endif %}
+              
+              {% if field.errors %}
+                <div class="invalid-feedback d-block text-danger-emphasis">
+                    {{ field.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary btn-lg fw-bold">Sign Up</button>
+          </div>
+        </form>
+
+        <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-25">
+            <p class="mb-0 text-white-50">
+              Already have an account? <a href="{% url 'login' %}" class="fw-bold text-decoration-none text-primary">Login</a>
+            </p>
         </div>
-      {% endfor %}
-      <button type="submit" class="btn btn-success w-100">Sign Up</button>
-    </form>
-    <p class="text-center mt-3">
-      Already have an account?
-      <a href="{% url 'login' %}">Login</a>
-    </p>
+    </div>
   </div>
 </div>
+
+<style>
+    /* Override input styles specifically for this form if needed, 
+       though global styles.css should handle .form-control */
+    .glass-card input {
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #fff !important;
+    }
+    .glass-card input:focus {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border-color: #8b5cf6 !important;
+        box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25) !important;
+    }
+    
+    /* Fix help text list styling */
+    .form-text ul {
+        padding-left: 1.2rem;
+        margin-bottom: 0;
+    }
+</style>
 {% endblock %}

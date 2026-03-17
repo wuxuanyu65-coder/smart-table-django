@@ -1,43 +1,143 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}
-    Login
-{% endblock %}
-
-{% block nav_left %}
-{% endblock %}
-
-{% block nav_title %}
-    Login
-{% endblock %}
-
-{% block nav_right %}
-{% endblock %}
+{% block title %}{% trans "Welcome to SmartTable" %}{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-12 col-sm-10 col-md-6 col-lg-4">
-    <h2 class="mb-3 text-center">Account Login</h2>
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
-      {% endif %}
-      {% for field in form %}
-        <div class="mb-3">
-          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.errors %}
-            <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
-          {% endif %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="col-12 col-md-6 col-lg-5">
+    
+    <!-- Glass Card Container -->
+    <div class="card glass-card border-0 p-4 p-md-5">
+      <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-primary mb-2">SmartTable</h1>
+        <p class="text-muted lead">{% trans "Smart Dining Experience" %}</p>
+      </div>
+
+      <!-- Login Toggle Tabs -->
+      <div class="d-flex justify-content-center mb-4">
+        <div class="btn-group bg-dark bg-opacity-25 p-1 rounded-pill" role="group">
+          <button type="button" class="btn btn-sm rounded-pill px-4 fw-bold active-tab transition-all" 
+                  id="tab-customer" onclick="switchTab('customer')">
+            <i class="bi bi-person me-1"></i> {% trans "Customer" %}
+          </button>
+          <button type="button" class="btn btn-sm rounded-pill px-4 fw-bold text-secondary transition-all" 
+                  id="tab-staff" onclick="switchTab('staff')">
+            <i class="bi bi-shield-lock me-1"></i> {% trans "Staff" %}
+          </button>
         </div>
-      {% endfor %}
-      <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
-    <p class="text-center mt-3">
-      Don't have an account?
-      <a href="{% url 'signup' %}">Register</a>
-    </p>
+      </div>
+
+      <!-- Login Form -->
+      <div>
+        <h5 class="text-uppercase text-muted fw-bold small mb-3 text-center" id="login-title">
+            {% trans "Customer Login" %}
+        </h5>
+        
+        <form method="post" novalidate id="login-form">
+          {% csrf_token %}
+          
+          <!-- Hidden input for redirect destination -->
+          <input type="hidden" name="next" id="next-url" value="{% url 'menu' %}">
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger shadow-sm border-0" role="alert">{{ form.non_field_errors }}</div>
+          {% endif %}
+          
+          {% for field in form %}
+            <div class="mb-3">
+              <input type="{{ field.field.widget.input_type }}" 
+                     name="{{ field.name }}" 
+                     class="form-control form-control-lg border-0 shadow-sm" 
+                     placeholder="{% trans field.label %}"
+                     id="{{ field.id_for_label }}"
+                     {% if field.value %}value="{{ field.value }}"{% endif %}>
+              {% if field.errors %}
+                <div class="text-danger small mt-1 ps-2">{{ field.errors|striptags }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <div class="d-flex justify-content-between align-items-center mt-4 pt-2">
+            <a href="{% url 'signup' %}" class="btn btn-outline-primary btn-sm rounded-pill px-4 py-2 shadow-sm" id="signup-link">
+                {% trans "Register" %}
+            </a>
+            <button type="submit" class="btn btn-primary btn-sm px-4 py-2 rounded-pill shadow-sm ms-3 flex-grow-1" id="submit-btn">
+                {% trans "Sign In" %} <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="position-relative my-4">
+        <hr class="text-muted" style="opacity: 0.2;">
+        <span class="position-absolute top-50 start-50 translate-middle px-2 text-muted small bg-transparent rounded-pill border border-secondary" style="backdrop-filter: blur(5px);">{% trans "OR" %}</span>
+      </div>
+
+      <!-- Guest Section -->
+      <div class="text-center">
+        <a href="{% url 'menu' %}" class="btn btn-outline-light w-100 py-2 rounded-pill border-opacity-25">
+            <span>🍽️</span> 
+            <span>{% trans "Continue as Guest" %}</span>
+            <span class="small opacity-75 ms-1">({% trans "No Account" %})</span>
+        </a>
+      </div>
+
+    </div>
   </div>
 </div>
+
+<style>
+  .active-tab {
+    background-color: var(--bs-primary) !important;
+    color: white !important;
+  }
+  .transition-all {
+    transition: all 0.3s ease;
+  }
+</style>
+
+<script>
+  function switchTab(type) {
+    const tabCustomer = document.getElementById('tab-customer');
+    const tabStaff = document.getElementById('tab-staff');
+    const loginTitle = document.getElementById('login-title');
+    const nextUrl = document.getElementById('next-url');
+    const signupLink = document.getElementById('signup-link');
+    const submitBtn = document.getElementById('submit-btn');
+
+    if (type === 'customer') {
+      // Activate Customer Tab
+      tabCustomer.classList.add('active-tab');
+      tabCustomer.classList.remove('text-secondary');
+      
+      tabStaff.classList.remove('active-tab');
+      tabStaff.classList.add('text-secondary');
+      
+      // Update Content
+      loginTitle.textContent = "{% trans 'Customer Login' %}";
+      nextUrl.value = "{% url 'menu' %}";
+      signupLink.style.display = 'inline-block'; // Show register link
+      submitBtn.classList.remove('w-100');
+      submitBtn.classList.add('ms-3');
+      submitBtn.classList.add('flex-grow-1');
+      
+    } else {
+      // Activate Staff Tab
+      tabStaff.classList.add('active-tab');
+      tabStaff.classList.remove('text-secondary');
+      
+      tabCustomer.classList.remove('active-tab');
+      tabCustomer.classList.add('text-secondary');
+      
+      // Update Content
+      loginTitle.textContent = "{% trans 'Staff Login' %}";
+      nextUrl.value = "{% url 'admin-dashboard' %}"; // Redirect to dashboard
+      signupLink.style.display = 'none'; // Hide register link for staff
+      submitBtn.classList.remove('ms-3');
+      submitBtn.classList.remove('flex-grow-1');
+      submitBtn.classList.add('w-100');
+    }
+  }
+</script>
 {% endblock %}

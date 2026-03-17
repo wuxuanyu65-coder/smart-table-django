@@ -5,38 +5,148 @@
 {% block content %}
 <div class="admin-layout">
     <div class="sidebar">
+        <h5 class="mb-3">Management</h5>
         <ul class="admin-menu">
+            <li><a href="{% url 'admin-dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'orders:admin-live-orders' %}">Live Orders</a></li>
             <li><a href="{% url 'menu-manage' %}" class="fw-bold text-primary">Menu Management</a></li>
+            <li><a href="{% url 'orders:admin-order-history' %}">Order History</a></li>
+            <li><a href="{% url 'orders:admin-settings' %}">Settings</a></li>
         </ul>
     </div>
     <div class="admin-content">
         <h2 class="mb-4">{{ title }}</h2>
-        <form method="post" class="card p-4 shadow-sm" style="max-width: 600px;">
+        <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm" style="max-width: 600px;">
             {% csrf_token %}
+            
+            <h5 class="mb-3 border-bottom pb-2">Basic Info</h5>
             {% for field in form %}
-            <div class="mb-3">
-                {% if field.name == 'is_available' %}
-                <div class="form-check">
+                {% if field.name != 'is_vegetarian' and field.name != 'is_vegan' and field.name != 'is_gluten_free' and field.name != 'allergens' %}
+                <div class="mb-3">
+                    {% if field.name == 'is_available' %}
+                    <div class="form-check">
+                        {{ field }}
+                        <label class="form-check-label" for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+                    </div>
+                    {% else %}
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                     {{ field }}
-                    <label class="form-check-label" for="{{ field.id_for_label }}">
-                        {{ field.label }}
-                    </label>
-                </div>
-                {% else %}
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% endif %}
-                
-                {% if field.help_text %}
-                <div class="form-text">{{ field.help_text }}</div>
-                {% endif %}
-                {% if field.errors %}
-                <div class="text-danger">
-                    {{ field.errors }}
+                    {% endif %}
+                    
+                    {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="text-danger">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
                 </div>
                 {% endif %}
-            </div>
             {% endfor %}
+
+            <h5 class="mb-3 border-bottom pb-2 mt-4">Dietary Info</h5>
+            {% for field in form %}
+                {% if field.name == 'is_vegetarian' or field.name == 'is_vegan' or field.name == 'is_gluten_free' or field.name == 'allergens' %}
+                <div class="mb-3">
+                    {% if field.name == 'is_vegetarian' or field.name == 'is_vegan' or field.name == 'is_gluten_free' %}
+                    <div class="form-check">
+                        {{ field }}
+                        <label class="form-check-label" for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+                    </div>
+                    {% elif field.name == 'allergens' %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label for="{{ field.id_for_label }}" class="form-label mb-0">{{ field.label }}</label>
+                        <button type="button" class="btn btn-sm btn-outline-primary py-0" onclick="toggleAddAllergen()">
+                            <i class="bi bi-plus"></i> New
+                        </button>
+                    </div>
+                    
+                    <!-- Add New Allergen Input (Hidden by default) -->
+                    <div id="new-allergen-container" class="mb-3" style="display:none;">
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="new-allergen-name" class="form-control" placeholder="Enter new allergen name">
+                            <button class="btn btn-outline-success" type="button" 
+                                    hx-post="{% url 'add-allergen' %}" 
+                                    hx-vals='js:{"name": document.getElementById("new-allergen-name").value}'
+                                    hx-target="#allergen-list-container"
+                                    hx-swap="beforeend"
+                                    onclick="setTimeout(() => { document.getElementById('new-allergen-name').value = ''; toggleAddAllergen(); }, 200)">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+
+                    <style>
+                        #allergen-list-container {
+                            max-height: 200px;
+                            overflow-y: auto;
+                            background: rgba(15, 23, 42, 0.6) !important;
+                            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                            padding: 10px;
+                            border-radius: 5px;
+                        }
+                        #allergen-list-container h6 {
+                            color: rgba(255, 255, 255, 0.7) !important;
+                            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                        }
+                        #allergen-list-container .form-check-label {
+                            color: #e2e8f0 !important;
+                        }
+                    </style>
+                    <div class="row g-2" id="allergen-list-container">
+                        {% if grouped_allergens %}
+                            {% for code, group in grouped_allergens.items %}
+                                {% if group.widgets %}
+                                <div class="col-12 mt-2 mb-1">
+                                    <h6 class="pb-1 small">{{ group.label }}</h6>
+                                </div>
+                                {% for checkbox in group.widgets %}
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                            {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% for checkbox in field %}
+                            <div class="col-6">
+                                <div class="form-check">
+                                    {{ checkbox.tag }}
+                                    <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                        {{ checkbox.choice_label }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% endif %}
+                    
+                    {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                    {% if field.errors %}
+                    <div class="text-danger">
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+
             <div class="d-flex gap-2 mt-4">
                 <button type="submit" class="btn btn-primary">Save</button>
                 <a href="{% url 'menu-manage' %}" class="btn btn-outline-secondary">Cancel</a>
@@ -44,4 +154,16 @@
         </form>
     </div>
 </div>
+
+<script>
+function toggleAddAllergen() {
+    const container = document.getElementById('new-allergen-container');
+    if (container.style.display === 'none') {
+        container.style.display = 'block';
+        document.getElementById('new-allergen-name').focus();
+    } else {
+        container.style.display = 'none';
+    }
+}
+</script>
 {% endblock %}

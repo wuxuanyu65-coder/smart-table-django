@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}
+    My Profile
+{% endblock %}
+
+{% block nav_title %}
+    My Profile
+{% endblock %}
+
+{% block nav_right %} <a href="{% url 'orders:cart' %}" class="cart-link">
+    🛒 <span id="cart-count">{{ cart_count|default:0 }}</span> </a>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <!-- User Info Card -->
+        <div class="glass-card p-4 mb-4">
+            <div class="d-flex align-items-center mb-3">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 64px; height: 64px;">
+                    <span class="fs-2 text-white">{{ user.username|first|upper }}</span>
+                </div>
+                <div>
+                    <h3 class="text-white mb-0">{{ user.username }}</h3>
+                    <p class="text-secondary mb-0">{{ user.email }}</p>
+                </div>
+            </div>
+            
+            <hr class="border-secondary opacity-25">
+            
+            <div class="d-grid gap-2">
+                <a href="{% url 'orders:my-orders' %}" class="btn btn-outline-light">
+                    <i class="bi bi-clock-history me-2"></i> Order History
+                </a>
+                <a href="{% url 'favorites-list' %}" class="btn btn-outline-danger">
+                    <i class="bi bi-heart-fill me-2"></i> My Favorites
+                </a>
+            </div>
+        </div>
+
+        <!-- Allergen Settings Card -->
+        <div class="glass-card p-4 border-warning">
+            <h4 class="text-warning mb-3">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Allergen Settings
+            </h4>
+            <p class="text-secondary small mb-3">
+                Select any allergens you have. We will warn you if you try to order a dish containing these ingredients.
+            </p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-2">
+                    {% for allergen in all_allergens %}
+                    <div class="col-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="allergens" value="{{ allergen.id }}" id="allergen-{{ allergen.id }}"
+                                   {% if allergen in user_allergens %}checked{% endif %}>
+                            <label class="form-check-label text-white" for="allergen-{{ allergen.id }}">
+                                {{ allergen.name }}
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-warning w-100">Save Preferences</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="text-center mt-4">
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link text-danger text-decoration-none">
+                    Log Out
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
