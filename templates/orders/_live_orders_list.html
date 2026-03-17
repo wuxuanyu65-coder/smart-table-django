@@ -1,0 +1,51 @@
+{% for order in orders %}
+<div class="col-md-6 mb-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Order #{{ order.id }}</h5>
+            <span class="badge bg-light text-dark">{{ order.get_status_display }}</span>
+        </div>
+        <div class="card-body">
+            <p><strong>Table:</strong> {{ order.table.table_number }}</p>
+            <p><strong>Time:</strong> {{ order.order_time|date:"H:i" }}</p>
+            <hr>
+            <h6>Items:</h6>
+            <ul class="list-unstyled">
+                {% for item in order.items.all %}
+                <li>
+                    {{ item.quantity }}x {{ item.item.name }}
+                    {% if item.special_request %}
+                    <div class="text-danger small fst-italic ms-3">
+                        Note: {{ item.special_request }}
+                    </div>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="card-footer bg-white text-end">
+            {% if order.status == 'pending' %}
+            <button class="btn btn-sm btn-warning"
+                    hx-post="{% url 'orders:update-order-status' order.id %}"
+                    hx-vals='{"status": "preparing"}'
+                    hx-target="closest .col-md-6"
+                    hx-swap="outerHTML">
+                Start Preparing
+            </button>
+            {% endif %}
+            
+            <button class="btn btn-sm btn-success" 
+                    hx-post="{% url 'orders:update-order-status' order.id %}"
+                    hx-vals='{"status": "ready"}'
+                    hx-target="closest .col-md-6"
+                    hx-swap="outerHTML">
+                Mark Ready
+            </button>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="col-12 text-center text-muted py-5">
+    <p>No active orders right now.</p>
+</div>
+{% endfor %}

@@ -1,6 +1,43 @@
 {% for it in items %}
-<div class="food-card">
-  <div class="food-img">
+{% ifchanged it.category %}
+<div class="col-12 mt-4 mb-3 first-cat-mt-0">
+    <h4 class="text-white fw-bold border-start border-4 border-primary ps-3">{{ it.category }}</h4>
+</div>
+{% endifchanged %}
+
+<div class="col-12 col-md-6 col-lg-4 mb-4">
+<div class="food-card h-100 {% if not it.is_available %}opacity-75{% endif %}">
+  <div class="food-img position-relative" style="height: 200px;">
+    {% if it.image %}
+    <img src="{{ it.image.url }}" alt="{{ it.name }}" style="width: 100%; height: 100%; object-fit: cover; {% if not it.is_available %}filter: grayscale(100%);{% endif %}">
+    {% else %}
+    <div class="d-flex align-items-center justify-content-center bg-secondary text-white h-100">
+        <span class="fs-1 opacity-25">🍽️</span>
+    </div>
+    {% endif %}
+    
+    <!-- Availability Overlay -->
+    {% if not it.is_available %}
+    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.6);">
+        <span class="badge bg-danger fs-5 shadow">SOLD OUT</span>
+    </div>
+    {% endif %}
+
+    <!-- Favorite Icon -->
+    {% if user.is_authenticated %}
+    <div class="favorite-icon" 
+         style="position: absolute; top: 10px; right: 10px; cursor: pointer; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2);"
+         hx-post="{% url 'toggle-favorite' it.id %}"
+         hx-swap="innerHTML">
+        {% if it.is_favorite %}
+        <i class="bi bi-heart-fill text-danger fs-5"></i>
+        {% else %}
+        <i class="bi bi-heart text-white fs-5"></i>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if it.is_available %}
     <div class="counter-overlay">
       <div class="minus-circle" id="minus-{{ it.id }}"{% if it.current_qty|default:0 == 0 %} style="display:none"{% endif %}>
         <button hx-post="{% url 'orders:cart-dec' it.id %}" hx-swap="none" aria-controls="qty-{{ it.id }}" aria-label="Remove {{ it.name }}">−</button>
@@ -8,10 +45,55 @@
       <span class="counter-qty" id="qty-{{ it.id }}">{{ it.current_qty|default:0 }}</span>
       <button class="plus-btn" hx-post="{% url 'orders:cart-add' it.id %}" hx-swap="none" aria-controls="qty-{{ it.id }}" aria-label="Add {{ it.name }}">+</button>
     </div>
+    {% endif %}
   </div>
-  <div class="food-body">
-    <div class="food-name">{{ it.name }}</div>
-    <div class="food-price">£{{ it.price }}</div>
+  
+  <div class="food-body p-3 d-flex flex-column flex-grow-1">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+        <h5 class="food-name mb-0 fw-bold text-white text-truncate" style="font-size: 1.1rem; max-width: 70%;" title="{{ it.name }}">{{ it.name }}</h5>
+        <span class="food-price fw-bold text-primary ms-2 text-nowrap">£{{ it.price }}</span>
+    </div>
+    
+    {% if it.description %}
+    <div class="food-desc text-secondary mb-3 flex-grow-1" style="line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.95rem;">
+        {{ it.description }}
+    </div>
+    {% else %}
+    <div class="flex-grow-1"></div>
+    {% endif %}
+
+    {% if it.is_vegetarian or it.is_vegan or it.is_gluten_free or it.allergens %}
+    <div class="dietary-tags mt-auto pt-2 border-top border-secondary border-opacity-25 d-flex flex-wrap gap-1">
+        {% if it.is_vegetarian %}
+        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 rounded-pill fw-normal" style="font-size: 0.7rem;">
+            Vegetarian
+        </span>
+        {% endif %}
+        {% if it.is_vegan %}
+        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 rounded-pill fw-normal" style="font-size: 0.7rem;">
+            Vegan
+        </span>
+        {% endif %}
+        {% if it.is_gluten_free %}
+        <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 rounded-pill fw-normal" style="font-size: 0.7rem;">
+            Gluten-Free
+        </span>
+        {% endif %}
+        {% if it.allergens.exists %}
+        <div class="w-100 mt-1 d-flex flex-wrap gap-1">
+            {% for allergen in it.allergens.all %}
+                <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-25 rounded-pill fw-normal" style="font-size: 0.7rem;">
+                    <i class="bi bi-exclamation-triangle-fill me-1" style="font-size: 0.6rem;"></i>{{ allergen.name }}
+                </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
   </div>
 </div>
+</div>
 {% endfor %}
+<style>
+    .first-cat-mt-0:first-child { margin-top: 1rem !important; }
+</style>

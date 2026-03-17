@@ -11,74 +11,99 @@
     Admin Dashboard
 {% endblock %}
 
-{% block nav_right %} <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+{% block nav_right %}
+<form method="post" action="{% url 'logout' %}" class="d-inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-link text-decoration-none p-0 border-0 logout-link" style="color: inherit;">Logout</button>
+</form>
 {% endblock %}
 
 {% block content %}
-
-    <div class="admin-layout">
-
-        <div class="sidebar">
-            <h5 class="mb-3">Management</h5>
-            <ul class="admin-menu">
-                <li><a href="{% url 'admin-dashboard' %}" class="fw-bold text-primary">Dashboard</a></li>
-                <li><a href="#">Live Orders</a></li>
-                <li><a href="{% url 'menu-manage' %}">Menu Management</a></li>
-                <li><a href="#">Order History</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-        </div>
+<div class="admin-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h5 class="mb-3">Management</h5>
+        <ul class="admin-menu">
+            <li><a href="{% url 'admin-dashboard' %}" class="fw-bold text-primary">Dashboard</a></li>
+            <li><a href="{% url 'orders:admin-live-orders' %}">Live Orders</a></li>
+            <li><a href="{% url 'menu-manage' %}">Menu Management</a></li>
+            <li><a href="{% url 'orders:admin-order-history' %}">Order History</a></li>
+            <li><a href="{% url 'orders:admin-settings' %}">Settings</a></li>
+        </ul>
+    </div>
 
         <!-- Main Content -->
 
         <div class="admin-content">
 
-            <h2 class="mb-3">Live Orders</h2>
+            <h2 class="mb-4">Dashboard Overview</h2>
 
-            <div class="orders-grid">
-
-            <div class="order-card">
-
-                <h4>Table 3</h4>
-
-                <ul>
-
-                    <li>Black Pepper Beef Pasta ×1</li>
-                    <li>Americano ×1</li>
-
-                </ul>
-
-                <div class="order-status">
-
-                    <span class="status preparing">Preparing</span>
-
-                    <button class="btn small-btn">Mark Ready</button>
-
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title opacity-75">Today's Revenue</h6>
+                            <h3 class="card-text fw-bold">£{{ today_revenue|floatformat:2 }}</h3>
+                        </div>
+                    </div>
                 </div>
-
+                <div class="col-md-3">
+                    <div class="card bg-success text-white shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title opacity-75">Today's Orders</h6>
+                            <h3 class="card-text fw-bold">{{ today_order_count }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-dark shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title opacity-75">Pending Orders</h6>
+                            <h3 class="card-text fw-bold">{{ pending_count }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title opacity-75">Preparing</h6>
+                            <h3 class="card-text fw-bold">{{ preparing_count }}</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="order-card">
-
-                <h4>Table 5</h4>
-
-                <ul>
-
-                    <li>Tomato Soup ×2</li>
-                    <li>Latte ×1</li>
-
-                </ul>
-
-                <div class="order-status">
-
-                    <span class="status waiting">Waiting</span>
-
-                    <button class="btn small-btn">Start Preparing</button>
-
+            <!-- Quick Actions -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card glass-card shadow-sm">
+                        <div class="card-header bg-transparent text-white fw-bold border-bottom">Quick Actions</div>
+                        <div class="card-body d-grid gap-2">
+                            <a href="{% url 'orders:admin-live-orders' %}" class="btn btn-outline-primary text-start">
+                                🍳 View Live Kitchen Orders
+                            </a>
+                            <a href="{% url 'menu-manage' %}" class="btn btn-outline-secondary text-start">
+                                📋 Manage Menu Items
+                            </a>
+                            <a href="{% url 'orders:admin-order-history' %}" class="btn btn-outline-info text-start">
+                                📜 View All Order History
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
-            </div>
-
+                
+                <div class="col-md-6 mb-4">
+                     <div class="card glass-card shadow-sm h-100">
+                        <div class="card-header bg-transparent text-white fw-bold border-bottom">System Status</div>
+                        <div class="card-body">
+                            <p class="text-success fw-bold">✓ System Online</p>
+                            <p class="small text-muted">
+                                Current Server Time: {% now "jS F Y H:i" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Live Orders{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <div class="sidebar">
+        <h5 class="mb-3">Management</h5>
+        <ul class="admin-menu">
+            <li><a href="{% url 'admin-dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'orders:admin-live-orders' %}" class="fw-bold text-primary">Live Orders</a></li>
+            <li><a href="{% url 'menu-manage' %}">Menu Management</a></li>
+            <li><a href="{% url 'orders:admin-order-history' %}">Order History</a></li>
+            <li><a href="{% url 'orders:admin-settings' %}">Settings</a></li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Live Orders</h2>
+            <div class="spinner-border text-primary htmx-indicator" id="loading-indicator" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="row" hx-get="{% url 'orders:admin-live-orders' %}" hx-trigger="every 5s" hx-target="this" hx-swap="innerHTML" hx-indicator="#loading-indicator">
+            {% include "orders/_live_orders_list.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

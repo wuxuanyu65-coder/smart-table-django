@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "My Orders" %}{% endblock %}
+
+{% block page_header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="btn btn-outline-secondary rounded-circle me-3">
+            <i class="bi bi-arrow-left"></i>
+        </a>
+        {% endif %}
+        <h2 class="text-white fw-bold mb-0">{% trans "Order History" %}</h2>
+    </div>
+    <a href="{% url 'menu' %}" class="btn btn-outline-light rounded-pill">
+        <i class="bi bi-plus-lg"></i> {% trans "New Order" %}
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    {% for order in orders %}
+    <div class="col-lg-8 mb-4">
+        <div class="glass-card p-4">
+            <!-- Header: Order ID, Time, Status Badge -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pb-3 border-bottom border-secondary">
+                <div class="mb-2 mb-md-0">
+                    <h5 class="text-white fw-bold mb-1">{% trans "Order" %} #{{ order.id }}</h5>
+                    <div class="text-secondary small">
+                        <i class="bi bi-clock me-1"></i> {{ order.order_time|date:"Y-m-d H:i" }}
+                        <span class="mx-2">|</span>
+                        <i class="bi bi-shop me-1"></i> {% trans "Table" %} {{ order.table.table_number }}
+                    </div>
+                </div>
+                
+                <!-- Status Badge -->
+                {% if order.status == 'pending' %}
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fs-6">
+                        <i class="bi bi-hourglass-split me-1"></i> {% trans "Pending" %}
+                    </span>
+                {% elif order.status == 'preparing' %}
+                    <span class="badge bg-primary px-3 py-2 rounded-pill fs-6">
+                        <i class="bi bi-fire me-1"></i> {% trans "Cooking" %}
+                    </span>
+                {% elif order.status == 'ready' %}
+                    <span class="badge bg-success px-3 py-2 rounded-pill fs-6">
+                        <i class="bi bi-check-circle-fill me-1"></i> {% trans "Served" %}
+                    </span>
+                {% elif order.status == 'completed' %}
+                    <span class="badge bg-secondary px-3 py-2 rounded-pill fs-6">
+                        <i class="bi bi-archive-fill me-1"></i> {% trans "Completed" %}
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- Progress Bar (Visualizing Status) -->
+            <div class="position-relative mb-5 mx-5">
+                <div class="progress bg-dark border border-secondary" style="height: 6px;">
+                    <div class="progress-bar 
+                        {% if order.status == 'pending' %}bg-warning w-25
+                        {% elif order.status == 'preparing' %}bg-primary w-50
+                        {% elif order.status == 'ready' %}bg-success w-75
+                        {% elif order.status == 'completed' %}bg-secondary w-100
+                        {% endif %}" 
+                        role="progressbar"></div>
+                </div>
+                
+                <!-- Progress Steps -->
+                <div class="position-absolute top-0 start-0 translate-middle-x d-flex flex-column align-items-center" style="margin-top: -7px;">
+                    <div class="rounded-circle {% if order.status == 'pending' or order.status == 'preparing' or order.status == 'ready' or order.status == 'completed' %}bg-warning{% else %}bg-dark border border-secondary{% endif %} d-flex align-items-center justify-content-center" style="width: 20px; height: 20px;"></div>
+                    <div class="text-white small mt-2 text-center" style="width: 80px; line-height: 1.2;">{% trans "Ordered" %}</div>
+                </div>
+                <div class="position-absolute top-0 start-50 translate-middle-x d-flex flex-column align-items-center" style="margin-top: -7px;">
+                    <div class="rounded-circle {% if order.status == 'preparing' or order.status == 'ready' or order.status == 'completed' %}bg-primary{% else %}bg-dark border border-secondary{% endif %} d-flex align-items-center justify-content-center" style="width: 20px; height: 20px;"></div>
+                    <div class="text-white small mt-2 text-center" style="width: 80px; line-height: 1.2;">{% trans "Cooking" %}</div>
+                </div>
+                <div class="position-absolute top-0 start-100 translate-middle-x d-flex flex-column align-items-center" style="margin-top: -7px;">
+                    <div class="rounded-circle {% if order.status == 'ready' or order.status == 'completed' %}bg-success{% else %}bg-dark border border-secondary{% endif %} d-flex align-items-center justify-content-center" style="width: 20px; height: 20px;"></div>
+                    <div class="text-white small mt-2 text-center" style="width: 80px; line-height: 1.2;">{% trans "Served" %}</div>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="bg-dark bg-opacity-25 rounded-3 p-3 mb-3">
+                {% for item in order.items.all %}
+                <div class="d-flex justify-content-between align-items-start mb-2 last-mb-0">
+                    <div>
+                        <span class="text-white fw-medium">{{ item.quantity }}x {{ item.item.name }}</span>
+                        {% if item.special_request %}
+                        <div class="text-warning small ps-2 border-start border-warning mt-1">
+                            {{ item.special_request }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <span class="text-secondary">£{{ item.line_total }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Footer: Note & Total -->
+            <div class="d-flex justify-content-between align-items-end">
+                <div class="text-secondary small fst-italic" style="max-width: 60%;">
+                    {% if order.note %}
+                    <i class="bi bi-chat-left-text me-1"></i> {{ order.note }}
+                    {% endif %}
+                </div>
+                <div class="text-end">
+                    {% if order.discount > 0 %}
+                    <div class="text-success small mb-1">{% trans "Discount" %}: -£{{ order.discount }}</div>
+                    {% endif %}
+                    <div class="text-white fs-5 fw-bold">{% trans "Total" %}: £{{ order.total_price }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <i class="bi bi-receipt display-1 text-secondary mb-3"></i>
+        <h3 class="text-white mb-3">{% trans "No orders yet" %}</h3>
+        <p class="text-secondary mb-4">{% trans "Your order history will appear here." %}</p>
+        <a href="{% url 'menu' %}" class="btn btn-primary btn-lg rounded-pill shadow-lg">
+            {% trans "Start Ordering" %}
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

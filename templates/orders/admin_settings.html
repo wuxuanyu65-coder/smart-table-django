@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <div class="sidebar">
+        <h5 class="mb-3">Management</h5>
+        <ul class="admin-menu">
+            <li><a href="{% url 'admin-dashboard' %}">Dashboard</a></li>
+            <li><a href="{% url 'orders:admin-live-orders' %}">Live Orders</a></li>
+            <li><a href="{% url 'menu-manage' %}">Menu Management</a></li>
+            <li><a href="{% url 'orders:admin-order-history' %}">Order History</a></li>
+            <li><a href="{% url 'orders:admin-settings' %}" class="fw-bold text-primary">Settings</a></li>
+        </ul>
+    </div>
+
+    <div class="admin-content">
+        <h2 class="mb-4">System Settings</h2>
+        
+        <div class="card glass-card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Restaurant Information</h5>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Restaurant Name</label>
+                        <input type="text" class="form-control" value="SmartTable Demo Restaurant">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact Email</label>
+                        <input type="email" class="form-control" value="admin@smarttable.com">
+                    </div>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card glass-card shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="card-title">Operating Hours</h5>
+                <p class="text-muted">Configure your restaurant's opening and closing times.</p>
+                <button type="button" class="btn btn-primary">Edit Hours</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

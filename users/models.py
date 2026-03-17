@@ -10,6 +10,9 @@ class User(AbstractUser):
 
     role = models.CharField(max_length=16, choices=Roles.choices, default=Roles.CUSTOMER)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    # User Allergens (Replaced JSONField with ManyToManyField)
+    allergens = models.ManyToManyField("menu.Allergen", blank=True, related_name="users")
 
     def __str__(self) -> str:
         return f"{self.username} ({self.role})"

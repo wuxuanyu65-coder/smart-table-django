@@ -1,4 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm" role="navigation">
+  {% load i18n %}
   <div class="container">
     <a class="navbar-brand fw-bold" href="{% url 'menu' %}">SmartTable</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
@@ -6,20 +7,52 @@
     </button>
     <div class="collapse navbar-collapse" id="navMain">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if user.is_staff %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+            <a class="nav-link fw-bold text-primary" href="{% url 'orders:admin-live-orders' %}">{% trans "Staff Dashboard" %}</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link text-dark fw-bold" href="{% url 'menu' %}">{% trans "Menu" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'orders:cart' %}">Cart</a>
+          <a class="nav-link text-dark fw-bold" href="{% url 'orders:my-orders' %}">{% trans "Order History" %}</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark fw-bold" href="{% url 'favorites-list' %}">{% trans "Favorites" %}</a>
+        </li>
+        {% endif %}
       </ul>
       <div class="d-flex align-items-center gap-3">
+        <!-- Language Switcher -->
+        <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <select name="language" class="form-select form-select-sm border-0 bg-transparent text-secondary fw-bold" 
+                    style="cursor: pointer; width: auto; box-shadow: none;" 
+                    onchange="this.form.submit()">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                        {{ language.name_local|capfirst }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
         <a class="btn btn-outline-secondary position-relative" href="{% url 'orders:cart' %}" aria-label="View cart">
           🛒 <span id="cart-count">{{ cart_count|default:0 }}</span>
         </a>
         {% if user.is_authenticated %}
-          <span class="text-muted">{{ user.username }}</span>
-          <a class="btn btn-sm btn-outline-danger" href="{% url 'logout' %}">Logout</a>
+          <a href="{% url 'profile' %}" class="text-dark fw-bold me-2 text-decoration-none">
+            <i class="bi bi-person-circle"></i> {{ user.username }}
+          </a>
+          <form method="post" action="{% url 'logout' %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">Logout</button>
+          </form>
         {% else %}
           <a class="btn btn-sm btn-primary" href="{% url 'login' %}">Login</a>
         {% endif %}
