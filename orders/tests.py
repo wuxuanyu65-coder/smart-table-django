@@ -7,6 +7,26 @@ from tables.models import Table
 
 User = get_user_model()
 
+class OrderModelTests(TestCase):
+    def setUp(self):
+        self.table = Table.objects.create(table_number=2)
+        self.item = MenuItem.objects.create(name="Pizza", price=12.00, category="Mains")
+        
+    def test_order_creation_and_str(self):
+        order = Order.objects.create(table=self.table, total_price=24.00)
+        self.assertEqual(order.status, Order.Status.PENDING)
+        self.assertIn("Order #", str(order))
+        self.assertIn("Table 2", str(order))
+        self.assertIn("pending", str(order))
+        
+    def test_order_item_line_total_and_str(self):
+        order = Order.objects.create(table=self.table, total_price=24.00)
+        order_item = OrderItem.objects.create(
+            order=order, item=self.item, quantity=2, price=12.00
+        )
+        self.assertEqual(order_item.line_total(), 24.0)
+        self.assertEqual(str(order_item), "Pizza x2")
+
 class OrderCheckoutTests(TestCase):
     def setUp(self):
         # Create test data

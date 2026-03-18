@@ -13,6 +13,10 @@ class MenuModelTests(TestCase):
         it = MenuItem.objects.create(name="Soup", description="", price=Decimal("3.00"), category="Starter")
         self.assertIn("Soup", str(it))
 
+    def test_allergen_str(self):
+        allergen = Allergen.objects.create(name="Peanut", category=Allergen.Category.NUTS)
+        self.assertEqual(str(allergen), "Peanut")
+
     def test_favorite_unique(self):
         it = MenuItem.objects.create(name="Soup", description="", price=Decimal("3.00"), category="Starter")
         u = User.objects.create_user(username="alice", password="p")
