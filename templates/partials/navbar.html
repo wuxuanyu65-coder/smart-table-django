@@ -28,7 +28,7 @@
         <form action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
             <input name="next" type="hidden" value="{{ request.path }}">
-            <select name="language" class="form-select form-select-sm border-0 bg-transparent text-secondary fw-bold" 
+            <select name="language" aria-label="Select Language" class="form-select form-select-sm border-0 bg-transparent text-secondary fw-bold" 
                     style="cursor: pointer; width: auto; box-shadow: none;" 
                     onchange="this.form.submit()">
                 {% get_current_language as LANGUAGE_CODE %}
@@ -42,9 +42,11 @@
             </select>
         </form>
 
+        {% if not user.is_staff %}
         <a class="btn btn-outline-secondary position-relative" href="{% url 'orders:cart' %}" aria-label="View cart">
           🛒 <span id="cart-count">{{ cart_count|default:0 }}</span>
         </a>
+        {% endif %}
         {% if user.is_authenticated %}
           <a href="{% url 'profile' %}" class="text-dark fw-bold me-2 text-decoration-none">
             <i class="bi bi-person-circle"></i> {{ user.username }}
