@@ -42,9 +42,11 @@
             </select>
         </form>
 
+        {% if not user.is_staff %}
         <a class="btn btn-outline-secondary position-relative" href="{% url 'orders:cart' %}" aria-label="View cart">
           🛒 <span id="cart-count">{{ cart_count|default:0 }}</span>
         </a>
+        {% endif %}
         {% if user.is_authenticated %}
           <a href="{% url 'profile' %}" class="text-dark fw-bold me-2 text-decoration-none">
             <i class="bi bi-person-circle"></i> {{ user.username }}
