@@ -28,7 +28,7 @@
         <form action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
             <input name="next" type="hidden" value="{{ request.path }}">
-            <select name="language" class="form-select form-select-sm border-0 bg-transparent text-secondary fw-bold" 
+            <select name="language" aria-label="Select Language" class="form-select form-select-sm border-0 bg-transparent text-secondary fw-bold" 
                     style="cursor: pointer; width: auto; box-shadow: none;" 
                     onchange="this.form.submit()">
                 {% get_current_language as LANGUAGE_CODE %}

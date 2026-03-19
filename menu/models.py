@@ -17,6 +17,11 @@ class Allergen(models.Model):
         return self.name
 
 
+import os
+from io import BytesIO
+from django.core.files.base import ContentFile
+from PIL import Image
+
 class MenuItem(models.Model):
     name = models.CharField(max_length=120)
     description = models.TextField(blank=True)
@@ -32,6 +37,27 @@ class MenuItem(models.Model):
     
     # Allergens (Replaced JSONField with ManyToManyField)
     allergens = models.ManyToManyField(Allergen, blank=True, related_name="menu_items")
+
+    def save(self, *args, **kwargs):
+        # Image optimization (WebP and resize)
+        if self.image:
+            # Check if it's already WebP to prevent re-processing
+            if not self.image.name.lower().endswith('.webp'):
+                im = Image.open(self.image)
+                # Convert to RGB if it's RGBA or P to avoid issues with WebP
+                if im.mode in ("RGBA", "P"):
+                    im = im.convert("RGB")
+                # Resize if too large
+                im.thumbnail((800, 800), Image.Resampling.LANCZOS)
+                
+                output = BytesIO()
+                im.save(output, format='WEBP', quality=80)
+                output.seek(0)
+                
+                # Change the file extension to .webp
+                filename = os.path.splitext(self.image.name)[0] + '.webp'
+                self.image = ContentFile(output.read(), name=filename)
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.name} - {self.price}"

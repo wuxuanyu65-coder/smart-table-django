@@ -1,15 +1,15 @@
 {% for it in items %}
 {% ifchanged it.category %}
 <div class="col-12 mt-4 mb-3 first-cat-mt-0">
-    <h4 class="text-white fw-bold border-start border-4 border-primary ps-3">{{ it.category }}</h4>
+    <h2 class="text-white fw-bold h4 border-start border-4 border-primary ps-3">{{ it.category }}</h2>
 </div>
 {% endifchanged %}
 
 <div class="col-12 col-md-6 col-lg-4 mb-4">
-<div class="food-card h-100 {% if not it.is_available %}opacity-75{% endif %}">
+<div class="food-card grid-food-card h-100 {% if not it.is_available %}opacity-75{% endif %}">
   <div class="food-img position-relative" style="height: 200px;">
     {% if it.image %}
-    <img src="{{ it.image.url }}" alt="{{ it.name }}" style="width: 100%; height: 100%; object-fit: cover; {% if not it.is_available %}filter: grayscale(100%);{% endif %}">
+    <img src="{{ it.image.url }}" alt="{{ it.name }}" loading="lazy" decoding="async" width="400" height="200" style="width: 100%; height: 100%; object-fit: cover; {% if not it.is_available %}filter: grayscale(100%);{% endif %}">
     {% else %}
     <div class="d-flex align-items-center justify-content-center bg-secondary text-white h-100">
         <span class="fs-1 opacity-25">🍽️</span>
@@ -50,7 +50,7 @@
   
   <div class="food-body p-3 d-flex flex-column flex-grow-1">
     <div class="d-flex justify-content-between align-items-start mb-2">
-        <h5 class="food-name mb-0 fw-bold text-white text-truncate" style="font-size: 1.1rem; max-width: 70%;" title="{{ it.name }}">{{ it.name }}</h5>
+        <h3 class="food-name mb-0 fw-bold text-white text-truncate h5" style="font-size: 1.1rem; max-width: 70%;" title="{{ it.name }}">{{ it.name }}</h3>
         <span class="food-price fw-bold text-primary ms-2 text-nowrap">£{{ it.price }}</span>
     </div>
     
@@ -96,4 +96,19 @@
 {% endfor %}
 <style>
     .first-cat-mt-0:first-child { margin-top: 1rem !important; }
+    /* Override absolute positioning for food cards to prevent text overlapping image */
+    .grid-food-card {
+        aspect-ratio: auto !important;
+        display: flex;
+        flex-direction: column;
+    }
+    .grid-food-card .food-img {
+        position: relative !important;
+        height: 200px;
+        flex-shrink: 0;
+    }
+    .grid-food-card .food-body {
+        position: relative !important;
+        background: transparent !important;
+    }
 </style>

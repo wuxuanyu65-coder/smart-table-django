@@ -4,8 +4,11 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-insecure-smarttable")
-DEBUG = os.environ.get("DJANGO_DEBUG", "true").lower() == "true"
-ALLOWED_HOSTS: list[str] = ["*"]
+#DEBUG = os.environ.get("DJANGO_DEBUG", "true").lower() == "true"
+DEBUG = False
+#ALLOWED_HOSTS: list[str] = ["*"]
+ALLOWED_HOSTS = ['13.135.73.127', 'jkseclab.xyz', 'localhost', '127.0.0.1']
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -85,8 +88,10 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -103,3 +108,5 @@ MESSAGE_TAGS = {
 
 LOGIN_REDIRECT_URL = "menu"
 LOGOUT_REDIRECT_URL = "login"
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
